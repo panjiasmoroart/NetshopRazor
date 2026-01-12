@@ -1,10 +1,12 @@
 
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace NetshopRazor.Pages
 {
@@ -68,6 +70,37 @@ namespace NetshopRazor.Pages
 			if (Phone == null) Phone = "";
 
             // Add this message to the database 
+			try
+			{
+				
+				string connectionString = "Data Source=.\\sqlexpress;Initial Catalog=netshoprazor_db;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+				
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					string sql = "INSERT INTO messages " +
+						"(firstname, lastname, email, phone, subject, message) VALUES " +
+						"(@firstname, @lastname, @email, @phone, @subject, @message);";
+
+					using (SqlCommand command = new SqlCommand(sql, connection))
+					{
+						command.Parameters.AddWithValue("@firstname", FirstName);
+						command.Parameters.AddWithValue("@lastname", LastName);
+						command.Parameters.AddWithValue("@email", Email);
+						command.Parameters.AddWithValue("@phone", Phone);
+						command.Parameters.AddWithValue("@subject", Subject);
+						command.Parameters.AddWithValue("@message", Message);
+
+						command.ExecuteNonQuery();
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				// Error
+				ErrorMessage = ex.Message;
+				return;
+			}
 
             // Send Confirmation Email to the client 
 
