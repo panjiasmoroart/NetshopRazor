@@ -1,17 +1,33 @@
 ﻿@page
 @model NetshopRazor.Pages.ContactModel
 @{
+    ViewData["Title"] = "Contact";
 }
 
 <div class="row">
     <div class="col-lg-9 mx-auto p-3">
         <h3 class="mb-3 font-weight-normal text-center pb-4">Contact Form</h3>
 
+        @if(Model.ErrorMessage.Length > 0)
+        {
+            <div class='alert alert-warning alert-dismissible fade show' role='alert'>
+                <strong>@Model.ErrorMessage</strong>
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>
+        }
+        else if (Model.SuccessMessage.Length > 0)
+        {
+            <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                <strong>@Model.SuccessMessage</strong>
+                <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+            </div>
+        }
+
         <form method="post">
             <div class="row mb-3">
                 <label class="col-sm-4 col-form-label">First Name*</label>
                 <div class="col-sm-8">
-                    <input class="form-control" >
+                    <input class="form-control" name="firstname" value="@Model.FirstName" >
                     <span  class="text-danger"></span>
                 </div>
             </div>
@@ -19,7 +35,7 @@
             <div class="row mb-3">
                 <label class="col-sm-4 col-form-label">Last Name*</label>
                 <div class="col-sm-8">
-                    <input class="form-control" >
+                    <input class="form-control" name="lastname" value="@Model.LastName">
                     <span class="text-danger"></span>
                 </div>
             </div>
@@ -27,7 +43,7 @@
             <div class="row mb-3">
                 <label class="col-sm-4 col-form-label">Email*</label>
                 <div class="col-sm-8">
-                    <input class="form-control" >
+                    <input class="form-control" name="email" value="@Model.Email">
                     <span  class="text-danger"></span>
                 </div>
             </div>
@@ -35,7 +51,7 @@
             <div class="row mb-3">
                 <label class="col-sm-4 col-form-label">Phone</label>
                 <div class="col-sm-8">
-                    <input class="form-control" >
+                    <input class="form-control" name="phone" value="@Model.Phone">
                     <span  class="text-danger"></span>
                 </div>
             </div>
@@ -43,11 +59,41 @@
             <div class="row mb-3">
                 <label class="col-sm-4 col-form-label" >Subject*</label>
                 <div class="col-sm-8">
-                    <select class="form-select">
-                        <option value="Order Status">Order Status</option>
+                    <select class="form-select" name="subject">
+                        @if (Model.Subject.Equals("Order Status")){
+                            <option value="Order Status" selected>Order Status</option>
+                        } 
+                        else
+                        {
+                            <option value="Order Status">Order Status</option>
+                        }
+
+                        @if (Model.Subject.Equals("Refund Request"))
+                        {
+                        <option value="Refund Request" selected>Refund Request</option>
+                        }
+                        else
+                        {
                         <option value="Refund Request">Refund Request</option>
-                        <option value="Job Application">Job Application</option>
-                        <option value="Other">Other</option>
+                        }
+
+                        @if (Model.Subject.Equals("Job Application"))
+                        {
+                            <option value="Job Application" selected>Job Application</option>
+                        }
+                        else
+                        {
+                            <option value="Job Application">Job Application</option>
+                        }
+
+                        @if (Model.Subject.Equals("Other"))
+                        {
+                            <option value="Other" selected>Other</option>
+                        }
+                        else
+                        {
+                            <option value="Other">Other</option>
+                        }
                     </select>
                     <span  class="text-danger"></span>
                 </div>
@@ -56,7 +102,7 @@
             <div class="row mb-3">
                 <label class="col-sm-4 col-form-label" >Message*</label>
                 <div class="col-sm-8">
-                    <textarea class="form-control" ></textarea>
+                    <textarea class="form-control" name="message">@Model.Message</textarea>
                     <span  class="text-danger"></span>
                 </div>
             </div>
