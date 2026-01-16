@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using MailKit.Net.Smtp;
+using MailKit;
+using MimeKit;
+using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages
 {
@@ -102,9 +106,18 @@ namespace NetshopRazor.Pages
 				return;
 			}
 
-            // Send Confirmation Email to the client 
+			// Send Confirmation Email to the client
+			string username = FirstName + " " + LastName;
+			string emailSubject = "About your message";
+			string emailMessage = "Dear " + username + ",\n" +
+				"We received your message. Thank you for contacting us.\n" +
+				"Our team will contact you very soon.\n" +
+				"Best Regards\n\n" +
+				"Your Message:\n" + Message;
 
-            SuccessMessage = "Your message has been received correctly";
+			EmailSender.SendEmail(Email, username, emailSubject, emailMessage).Wait();
+
+			SuccessMessage = "Your message has been received correctly";
 
 			FirstName = "";
 			LastName = "";
