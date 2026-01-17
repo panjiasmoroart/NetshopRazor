@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -44,7 +45,12 @@ namespace NetshopRazor.Pages.Admin.Books
 		public string errorMessage = "";
 		public string successMessage = "";
 
+		private IWebHostEnvironment webHostEnvironment;
 
+		public CreateModel(IWebHostEnvironment env)
+		{
+			webHostEnvironment = env;
+		}
 
 		public void OnGet()
         {
@@ -62,6 +68,18 @@ namespace NetshopRazor.Pages.Admin.Books
 			if (Description == null) Description = "";
 
 			// save the image file on the server
+			string newFileName = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+			newFileName += Path.GetExtension(ImageFile.FileName);
+
+			string imageFolder = webHostEnvironment.WebRootPath + "/images/books/";
+
+			string imageFullPath = Path.Combine(imageFolder, newFileName);
+			Console.WriteLine("New image: " + imageFullPath);
+
+			using (var stream = System.IO.File.Create(imageFullPath))
+			{
+				ImageFile.CopyTo(stream);
+			}
 
 			// save the new book in the database
 
