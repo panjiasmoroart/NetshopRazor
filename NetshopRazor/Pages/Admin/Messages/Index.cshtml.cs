@@ -9,7 +9,7 @@ namespace NetshopRazor.Pages.Admin.Messages
 		public List<MessageInfo> listMessages = new List<MessageInfo>();
 		public int page = 1; // the current html page 
 		public int totalPages = 0; // total pages
-		private readonly int pageSize = 2; // each html page shows pageSize messages
+		private readonly int pageSize = 5; // each html page shows pageSize messages
 
 		public void OnGet()
 		{
