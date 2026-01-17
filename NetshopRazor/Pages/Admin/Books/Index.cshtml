@@ -1,6 +1,7 @@
 ﻿@page
 @model NetshopRazor.Pages.Admin.Books.IndexModel
 @{
+    ViewData["Title"] = "Books";
 }
 
 <h2 class="my-3">List of Books</h2>
@@ -11,7 +12,7 @@
     </div>
     <div class="col">
         <form class="d-flex">
-            <input class="form-control me-2" type="search" name="search" value="" placeholder="Search by Title or Author">
+            <input class="form-control me-2" type="search" name="search" value="@Model.search" placeholder="Search by Title or Author">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
     </div>
