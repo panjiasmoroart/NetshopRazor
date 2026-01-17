@@ -13,6 +13,9 @@ namespace NetshopRazor.Pages.Admin.Books
 		public int totalPages = 0;
 		private readonly int pageSize = 5; // books per page
 
+		public string column = "id";
+		public string order = "desc";
+
 		public void OnGet()
         {
 			search = Request.Query["search"];
@@ -30,6 +33,19 @@ namespace NetshopRazor.Pages.Admin.Books
 				{
 					page = 1;
 				}
+			}
+
+			string[] validColumns = { "id", "title", "authors", "num_pages", "price", "category", "created_at" };
+			column = Request.Query["column"];
+			if (column == null || !validColumns.Contains(column))
+			{
+				column = "id";
+			}
+
+			order = Request.Query["order"];
+			if (order == null || !order.Equals("asc"))
+			{
+				order = "desc";
 			}
 
 			try
@@ -58,7 +74,8 @@ namespace NetshopRazor.Pages.Admin.Books
 					{
 						sql += " WHERE title LIKE @search OR authors LIKE @search";
 					}
-					sql += " ORDER BY id DESC";
+					//sql += " ORDER BY id DESC";
+					sql += " ORDER BY " + column + " " + order; //" ORDER BY id DESC";
 					sql += " OFFSET @skip ROWS FETCH NEXT @pageSize ROWS ONLY";
 
 					using (SqlCommand command = new SqlCommand(sql, connection))

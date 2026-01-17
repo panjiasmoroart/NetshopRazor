@@ -18,6 +18,21 @@
     </div>
 </div>
 
+<script>
+    function sortTable(column) {
+        let order = "desc";
+        let currentColumn = "@Model.column";
+        let currentOrder = "@Model.order";
+
+        if (column == currentColumn) {
+            if (currentOrder == "asc") order = "desc";
+            else order = "asc";
+        }
+
+        window.location.href = '?search=@Model.search&column=' + column + '&order=' + order;
+    }
+</script>
+
 <table class="table">
     <thead>
         <tr>
@@ -57,7 +72,7 @@
     <ul class="pagination">
         @for (int i = 1; i <= Model.totalPages; i++)
         {
-            <li class="page-item"><a class="page-link" href="?page=@(i)&search=@(Model.search)">@i</a></li>
+            <li class="page-item"><a class="page-link" href="?page=@(i)&search=@(Model.search)&column=@Model.column&order=@Model.order">@i</a></li>
         }
     </ul>
 </nav>
