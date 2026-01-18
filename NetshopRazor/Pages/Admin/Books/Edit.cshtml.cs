@@ -126,7 +126,7 @@ namespace NetshopRazor.Pages.Admin.Books
 
 				using (var stream = System.IO.File.Create(imageFullPath))
 				{
-					ImageFile.CopyTo(stream);
+					ImageFile.CopyTo(stream); 
 				}
 
 				// delete old image
