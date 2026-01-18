@@ -99,11 +99,58 @@ namespace NetshopRazor.Pages.Auth
 			string message = "Dear " + username + ",\n\n" +
 				"Your account has been created successfully.\n\n" +
 				"Best Regards";
-			EmailSender.SendEmail(Email, username, subject, message).Wait();
+			//EmailSender.SendEmail(Email, username, subject, message).Wait();
 
 			// initialize the authenticated session => add the user details to the session data
+			try
+			{
+				string connectionString = "Data Source=.\\sqlexpress;Initial Catalog=netshoprazor_db;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					string sql = "SELECT * FROM users WHERE email=@email";
+
+					using (SqlCommand command = new SqlCommand(sql, connection))
+					{
+						command.Parameters.AddWithValue("@email", Email);
+
+						using (SqlDataReader reader = command.ExecuteReader())
+						{
+							if (reader.Read())
+							{
+								int id = reader.GetInt32(0);
+								string firstname = reader.GetString(1);
+								string lastname = reader.GetString(2);
+								string email = reader.GetString(3);
+								string phone = reader.GetString(4);
+								string address = reader.GetString(5);
+								//string hashedPassword = reader.GetString(6);
+								string role = reader.GetString(7);
+								string created_at = reader.GetDateTime(8).ToString("MM/dd/yyyy");
+
+								HttpContext.Session.SetInt32("id", id);
+								HttpContext.Session.SetString("firstname", firstname);
+								HttpContext.Session.SetString("lastname", lastname);
+								HttpContext.Session.SetString("email", email);
+								HttpContext.Session.SetString("phone", phone);
+								HttpContext.Session.SetString("address", address);
+								HttpContext.Session.SetString("role", role);
+								HttpContext.Session.SetString("created_at", created_at);
+							}
+						}
+					}
+
+				}
+			}
+			catch(Exception ex)
+			{
+				errorMessage = ex.Message;
+				return;
+			}
 
 			successMessage = "Account created successfully";
+			// redirect to the home page
+			Response.Redirect("/");
 		}
 	}
 
