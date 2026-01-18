@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -82,10 +83,41 @@ namespace NetshopRazor.Pages.Admin.Books
 			}
 
 			// save the new book in the database
+			try
+			{
+				string connectionString = "Data Source=.\\sqlexpress;Initial Catalog=netshoprazor_db;Integrated Security=True;Encrypt=True;TrustServerCertificate=True";
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					string sql = "INSERT INTO books " +
+					"(title, authors, isbn, num_pages, price, category, description, image_filename) VALUES " +
+					"(@title, @authors, @isbn, @num_pages, @price, @category, @description, @image_filename);";
+
+					using (SqlCommand command = new SqlCommand(sql, connection))
+					{
+						command.Parameters.AddWithValue("@title", Title);
+						command.Parameters.AddWithValue("@authors", Authors);
+						command.Parameters.AddWithValue("@isbn", ISBN);
+						command.Parameters.AddWithValue("@num_pages", NumPages);
+						command.Parameters.AddWithValue("@price", Price);
+						command.Parameters.AddWithValue("@category", Category);
+						command.Parameters.AddWithValue("@description", Description);
+						command.Parameters.AddWithValue("@image_filename", newFileName);
+
+						command.ExecuteNonQuery();
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+				errorMessage = ex.Message;
+				return;
+			}
 
 			successMessage = "Data saved correctly";
 
-			//Response.Redirect("/Admin/Books/Index");
+			Response.Redirect("/Admin/Books/Index");
 		}
 	}
 }
