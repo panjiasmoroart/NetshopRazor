@@ -36,7 +36,7 @@ namespace NetshopRazor.MyHelpers
 				SecureSocketOptions.StartTls
 			);
 
-			await smtp.AuthenticateAsync("xx", "aa");
+			await smtp.AuthenticateAsync("xxx", "aaa");
 
 			await smtp.SendAsync(email);
 			await smtp.DisconnectAsync(true);

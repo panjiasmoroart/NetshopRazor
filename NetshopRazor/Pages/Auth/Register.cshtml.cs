@@ -3,6 +3,7 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages.Auth
 {
@@ -92,6 +93,13 @@ namespace NetshopRazor.Pages.Auth
 			}
 
 			// send confirmation email to the user
+			// send confirmation email to the user
+			string username = Firstname + " " + Lastname;
+			string subject = "Account created successfully";
+			string message = "Dear " + username + ",\n\n" +
+				"Your account has been created successfully.\n\n" +
+				"Best Regards";
+			EmailSender.SendEmail(Email, username, subject, message).Wait();
 
 			// initialize the authenticated session => add the user details to the session data
 
