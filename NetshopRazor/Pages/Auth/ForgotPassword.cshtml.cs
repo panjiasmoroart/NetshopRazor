@@ -6,7 +6,8 @@ using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages.Auth
 {
-    public class ForgotPasswordModel : PageModel
+	//[RequireNoAuth]
+	public class ForgotPasswordModel : PageModel
     {
 		[BindProperty, Required(ErrorMessage = "The Email is required"), EmailAddress]
 		public string Email { get; set; } = "";
@@ -16,7 +17,7 @@ namespace NetshopRazor.Pages.Auth
 
 		public void OnGet()
         {
-        }
+		}
 
 		public void OnPost()
 		{
