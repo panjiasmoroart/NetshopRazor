@@ -8,7 +8,8 @@ builder.Services.AddDistributedMemoryCache();
 
 builder.Services.AddSession(options =>
 {
-	options.IdleTimeout = TimeSpan.FromSeconds(10);
+	//options.IdleTimeout = TimeSpan.FromSeconds(60); // 1 menit / 60seconds 
+	options.IdleTimeout = TimeSpan.FromMinutes(20); // Dev: 20–30 menit / Prod 60-30 menit
 	options.Cookie.HttpOnly = true;
 	options.Cookie.IsEssential = true;
 });
