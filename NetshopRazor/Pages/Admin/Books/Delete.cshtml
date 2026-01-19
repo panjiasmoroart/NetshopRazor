@@ -1,6 +1,8 @@
 ﻿@page
 @using System.Data.SqlClient
 @inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment webHostEnvironment
+@using NetshopRazor.MyHelpers;
+@attribute [RequireAuth(RequiredRole = "admin")]
 @{
     string id = Request.Query["id"];
 

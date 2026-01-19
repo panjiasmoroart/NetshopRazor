@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages.Auth
 {
+	[RequireNoAuth]
 	[BindProperties]
 	public class LoginModel : PageModel
     {
@@ -20,16 +22,17 @@ namespace NetshopRazor.Pages.Auth
 		public string errorMessage = "";
 		public string successMessage = "";
 
-		public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
-		{
-			base.OnPageHandlerExecuting(context);
+		// move to helpers
+		//public override void OnPageHandlerExecuting(PageHandlerExecutingContext context)
+		//{
+		//	base.OnPageHandlerExecuting(context);
 
-			if (HttpContext.Session.GetString("role") != null)
-			{
-				// the user is already authenticated => redirect the user to the home page
-				context.Result = new RedirectResult("/");
-			}
-		}
+		//	if (HttpContext.Session.GetString("role") != null)
+		//	{
+		//		// the user is already authenticated => redirect the user to the home page
+		//		context.Result = new RedirectResult("/");
+		//	}
+		//}
 		public void OnGet()
         {
         }

@@ -2,10 +2,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages.Admin.Books
 {
-    public class EditModel : PageModel
+	[RequireAuth(RequiredRole = "admin")]
+	public class EditModel : PageModel
     {
 		[BindProperty]
 		public int Id { get; set; }

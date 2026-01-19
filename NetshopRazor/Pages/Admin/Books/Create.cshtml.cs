@@ -3,10 +3,12 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages.Admin.Books
 {
-    public class CreateModel : PageModel
+	[RequireAuth(RequiredRole = "admin")]
+	public class CreateModel : PageModel
     {
 		[BindProperty]
 		[Required(ErrorMessage = "The Title is required")]

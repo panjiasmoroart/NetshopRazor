@@ -1,11 +1,13 @@
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace NetshopRazor.Pages.Admin.Messages
 {
-    public class DetailsModel : PageModel
+	[RequireAuth(RequiredRole = "admin")]
+	public class DetailsModel : PageModel
     {
 		public MessageInfo messageInfo = new MessageInfo();
 		public void OnGet()

@@ -1,9 +1,11 @@
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 
 namespace NetshopRazor.Pages.Admin.Messages
 {
+	[RequireAuth(RequiredRole = "admin")]
 	public class IndexModel : PageModel
 	{
 		public List<MessageInfo> listMessages = new List<MessageInfo>();
