@@ -31,7 +31,12 @@ namespace NetshopRazor.Pages
 
 		public void OnGet()
         {
-        }
+			Firstname = HttpContext.Session.GetString("firstname") ?? "";
+			Lastname = HttpContext.Session.GetString("lastname") ?? "";
+			Email = HttpContext.Session.GetString("email") ?? "";
+			Phone = HttpContext.Session.GetString("phone");
+			Address = HttpContext.Session.GetString("address") ?? "";
+		}
 
 		public void OnPost()
 		{
@@ -46,6 +51,8 @@ namespace NetshopRazor.Pages
 
 
 			// update the user profile or the password
+
+			successMessage = "Profile or password updated correctly";
 		}
 
 	}
