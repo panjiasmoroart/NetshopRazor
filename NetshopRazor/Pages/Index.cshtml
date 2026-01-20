@@ -52,17 +52,17 @@
     <div class="container">
         <h1 class="pb-5 text-center display-5"><strong>Newest Books</strong></h1>
         <div class="row">
-            @for(int i = 0; i < 4; i++)
+            @foreach (var item in Model.listNewestBooks)
             {
                 <div class="col-lg-3 col-sm-6 my-2">
                     <div class="card shadow text-center h-100 book-item">
-                        <img src="/images/books/6689997-L.jpg" class="card-img-top p-3" alt="..." />
+                        <img src="/images/books/@item.ImageFileName" class="card-img-top p-3" alt="..." />
                         <div class="card-body">
-                            <h4>Title</h4>
-                            <p>Authors: Authors, Category: Category, Pages: NumPages</p>
-                            <h4>Price $</h4>
-                            <a class="btn btn-primary btn-sm my-2" href="/BookDetails?id=" role="button">Details</a>
-                            <button type="button" class="btn btn-warning btn-sm my-2" onclick="">
+                            <h4>@item.Title</h4>
+                            <p>Authors: @item.Authors, Category: @item.Category, Pages: @item.NumPages</p>
+                            <h4>@(item.Price)$</h4>
+                            <a class="btn btn-primary btn-sm my-2" href="/BookDetails?id=@(item.Id)" role="button">Details</a>
+                            <button type="button" class="btn btn-warning btn-sm my-2" onclick="addToCart(this, @item.Id)">
                                 Add to Cart <i class="bi bi-cart4"></i>
                             </button>
                         </div>
@@ -78,17 +78,17 @@
     <div class="container">
         <h1 class="pb-5 text-center display-5"><strong>Top Sales</strong></h1>
         <div class="row">
-            @for (int i = 0; i < 4; i++)
+            @foreach (var item in Model.listTopSales)
             {
                 <div class="col-lg-3 col-sm-6 my-2">
                     <div class="card shadow text-center h-100 book-item">
-                        <img src="/images/books/6528622-L.jpg" class="card-img-top p-3" alt="..." />
+                        <img src="/images/books/@item.ImageFileName" class="card-img-top p-3" alt="..." />
                         <div class="card-body">
-                            <h4>Title</h4>
-                            <p>Authors: Authors, Category: Category, Pages: NumPages</p>
-                            <h4>Price $</h4>
-                            <a class="btn btn-primary btn-sm my-2" href="/BookDetails?id=" role="button">Details</a>
-                            <button type="button" class="btn btn-warning btn-sm my-2" onclick="">
+                            <h4>@item.Title</h4>
+                            <p>Authors: @item.Authors, Category: @item.Category, Pages: @item.NumPages</p>
+                            <h4>@(item.Price)$</h4>
+                            <a class="btn btn-primary btn-sm my-2" href="/BookDetails?id=@(item.Id)" role="button">Details</a>
+                            <button type="button" class="btn btn-warning btn-sm my-2" onclick="addToCart(this, @item.Id)">
                                 Add to Cart <i class="bi bi-cart4"></i>
                             </button>
                         </div>
