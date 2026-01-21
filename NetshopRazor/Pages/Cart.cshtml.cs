@@ -53,6 +53,47 @@ namespace NetshopRazor.Pages
 			string? action = Request.Query["action"];
 			string? id = Request.Query["id"];
 
+			if (action != null && id != null && bookDictionary.ContainsKey(id))
+			{
+				if (action.Equals("add"))
+				{
+					bookDictionary[id] += 1;
+				}
+				else if (action.Equals("sub"))
+				{
+					if (bookDictionary[id] > 1) bookDictionary[id] -= 1;
+				}
+				else if (action.Equals("delete"))
+				{
+					bookDictionary.Remove(id);
+				}
+
+				// build the new cookie value
+				string newCookieValue = "";
+				foreach (var keyValuePair in bookDictionary)
+				{
+					for (int i = 0; i < keyValuePair.Value; i++)
+					{
+						newCookieValue += "-" + keyValuePair.Key;
+					}
+				}
+
+				if (newCookieValue.Length > 0)
+					newCookieValue = newCookieValue.Substring(1);
+
+				var cookieOptions = new CookieOptions();
+				cookieOptions.Expires = DateTime.Now.AddDays(365);
+				cookieOptions.Path = "/";
+
+				Response.Cookies.Append("shopping_cart", newCookieValue, cookieOptions);
+
+				// redirect to the same page:
+				//   - to remove the query string from the url
+				//   - to set the shopping cart size using the updated cookie
+				Response.Redirect(Request.Path.ToString());
+				return;
+			}
+
 			try
 			{
 				using (SqlConnection connection = new SqlConnection(connectionString))
