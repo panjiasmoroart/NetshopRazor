@@ -1,0 +1,48 @@
+﻿@page
+@model NetshopRazor.Pages.CartModel
+@{
+}
+
+<div class="row border rounded-3">
+    <div class="col-md-8 p-3">
+        <h4>Shopping Cart</h4>
+
+        <table class="table align-middle">
+            <tr>
+                <td style="width:100px"></td>
+                <td></td>
+                <td style="width:140px"></td>
+                <td style="width:70px"></td>
+                <td style="width:30px"></td>
+            </tr>
+
+                <tr>
+                <td><img src="/images/books/6528622-L.jpg" width="100" class="rounded" alt="..."></td>
+                    <td>
+                        <h4>Title</h4>
+                        <p>
+                            Authors: Authors<br>
+                            Category: Category<br>
+                            Price: $
+                        </p>
+                    </td>
+                    <td>
+                        <a href="/Cart?action=sub&id=1" class="btn btn-outline-secondary btn-sm" role="button">-</a>
+                        <span class="border rounded-3 p-2 m-1">2</span>
+                        <a href="/Cart?action=add&id=1" class="btn btn-outline-secondary btn-sm" role="button">+</a>
+                    </td>
+                    <td>Total Price</td>
+                    <td>
+                        <a href="/Cart?action=delete&id=1"><i class="bi bi-trash text-danger h4"></i></a>
+                    </td>
+                </tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <div class="text-white rounded my-2 p-3" style="background-color: #08618d;">
+            <h4>Order Summary</h4>
+            <hr>
+            
+        </div>
+    </div>
+</div>
