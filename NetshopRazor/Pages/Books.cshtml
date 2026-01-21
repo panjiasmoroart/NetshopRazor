@@ -59,5 +59,32 @@
             </form>
         </div>
 	</div>
-	<div class="col-md-8"></div>
+	<div class="col-md-8">
+        <table class="table align-middle">
+            <tbody>
+                @foreach (var item in Model.listBooks)
+                {
+                    <tr>
+                        <td style="width:200px">
+                            <img src="/images/books/@item.ImageFileName" class="img-fluid rounded" alt="..." />
+                        </td>
+                        <td>
+                            <h3>@item.Title</h3>
+                            <p>
+                                Authors: @item.Authors<br>
+                                Category: @item.Category<br>
+                                Pages: @item.NumPages
+                            </p>
+                            <h4>@(item.Price)$</h4>
+                            <a class="btn btn-primary btn-sm my-2" href="/BookDetails?id=@(item.Id)" role="button">Details</a>
+                            <button type="button" class="btn btn-warning btn-sm my-2" onclick="addToCart(this, @item.Id)">
+                                Add to Cart <i class="bi bi-cart4"></i>
+                            </button>
+                        </td>
+                    </tr>  
+                }
+            </tbody>
+        </table>
+
+    </div>
 </div>
