@@ -16,26 +16,29 @@
                 <td style="width:30px"></td>
             </tr>
 
+            @foreach (var item in Model.listOrderItems)
+            {
                 <tr>
-                <td><img src="/images/books/6528622-L.jpg" width="100" class="rounded" alt="..."></td>
+                    <td><img src="/images/books/@item.bookInfo.ImageFileName" width="100" class="rounded" alt="..."></td>
                     <td>
-                        <h4>Title</h4>
+                        <h4>@item.bookInfo.Title</h4>
                         <p>
-                            Authors: Authors<br>
-                            Category: Category<br>
-                            Price: $
+                            Authors: @item.bookInfo.Authors<br>
+                            Category: @item.bookInfo.Category<br>
+                            Price: @(item.bookInfo.Price)$
                         </p>
                     </td>
                     <td>
-                        <a href="/Cart?action=sub&id=1" class="btn btn-outline-secondary btn-sm" role="button">-</a>
-                        <span class="border rounded-3 p-2 m-1">2</span>
-                        <a href="/Cart?action=add&id=1" class="btn btn-outline-secondary btn-sm" role="button">+</a>
+                        <a href="/Cart?action=sub&id=@(item.bookInfo.Id)" class="btn btn-outline-secondary btn-sm" role="button">-</a>
+                        <span class="border rounded-3 p-2 m-1">@item.numCopies</span>
+                        <a href="/Cart?action=add&id=@(item.bookInfo.Id)" class="btn btn-outline-secondary btn-sm" role="button">+</a>
                     </td>
-                    <td>Total Price</td>
+                    <td>@(item.totalPrice)$</td>
                     <td>
-                        <a href="/Cart?action=delete&id=1"><i class="bi bi-trash text-danger h4"></i></a>
+                        <a href="/Cart?action=delete&id=@(item.bookInfo.Id)"><i class="bi bi-trash text-danger h4"></i></a>
                     </td>
                 </tr>
+            }
         </table>
     </div>
     <div class="col-md-4">
