@@ -31,8 +31,44 @@ namespace NetshopRazor.Pages
 					connection.Open();
 
 					string sql = "SELECT * FROM books";
+					sql += " WHERE (title LIKE @search OR authors LIKE @search)";
+
+					if (PriceRange.Equals("0_50"))
+					{
+						sql += " AND price <= 50";
+					}
+					else if (PriceRange.Equals("50_100"))
+					{
+						sql += " AND price >= 50 AND price <= 100";
+					}
+					else if (PriceRange.Equals("above100"))
+					{
+						sql += " AND price >= 100";
+					}
+
+					if (PageRange.Equals("0_100"))
+					{
+						sql += " AND num_pages <= 100";
+					}
+					else if (PageRange.Equals("100_299"))
+					{
+						sql += " AND num_pages >= 100 AND num_pages <= 299";
+					}
+					else if (PageRange.Equals("above300"))
+					{
+						sql += " AND num_pages >= 300";
+					}
+
+					if (!Category.Equals("any"))
+					{
+						sql += " AND category=@category";
+					}
+
 					using (SqlCommand command = new SqlCommand(sql, connection))
 					{
+						command.Parameters.AddWithValue("@search", "%" + Search + "%");
+						command.Parameters.AddWithValue("@category", Category);
+
 						using (SqlDataReader reader = command.ExecuteReader())
 						{
 							while (reader.Read())
