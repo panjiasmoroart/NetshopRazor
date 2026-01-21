@@ -2,12 +2,23 @@ using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using NetshopRazor.Pages.Admin.Books;
+using System.ComponentModel.DataAnnotations;
 
 namespace NetshopRazor.Pages
 {
+	[BindProperties]
     public class CartModel : PageModel
     {
+		[Required(ErrorMessage = "The Address is required")]
+		public string Address { get; set; } = "";
+
+		[Required]
+		public string PaymentMethod { get; set; } = "";
+
 		public List<OrderItem> listOrderItems = new List<OrderItem>();
+		public decimal subtotal = 0;
+		public decimal shippingFee = 5;
+		public decimal total = 0;
 
 		private readonly string connectionString;
 		public CartModel(IConfiguration configuration)
@@ -129,6 +140,9 @@ namespace NetshopRazor.Pages
 									item.totalPrice = item.numCopies * item.bookInfo.Price;
 
 									listOrderItems.Add(item);
+
+									subtotal += item.totalPrice;
+									total = subtotal + shippingFee;
 								}
 							}
 						}
@@ -140,6 +154,8 @@ namespace NetshopRazor.Pages
 			{
 				Console.WriteLine(ex.Message);
 			}
+
+			Address = HttpContext.Session.GetString("address") ?? "";
 		}
 	}
 
