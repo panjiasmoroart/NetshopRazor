@@ -11,6 +11,10 @@ namespace NetshopRazor.Pages.Admin.Orders
 	{
 		public List<OrderInfo> listOrders = new List<OrderInfo>();
 
+		public int page = 1; // the current html page
+		public int totalPages = 0;
+		private readonly int pageSize = 3; // orders per page
+
 		private readonly string connectionString;
 
 		public IndexModel(IConfiguration configuration)
@@ -21,13 +25,34 @@ namespace NetshopRazor.Pages.Admin.Orders
 		{
 			try
 			{
+				string requestPage = Request.Query["page"];
+				page = int.Parse(requestPage);
+			}
+			catch (Exception ex)
+			{
+				page = 1;
+			}
+
+			try
+			{
 				using (SqlConnection connection = new SqlConnection(connectionString))
 				{
 					connection.Open();
 
+					string sqlCount = "SELECT COUNT(*) FROM orders";
+					using (SqlCommand command = new SqlCommand(sqlCount, connection))
+					{
+						decimal count = (int)command.ExecuteScalar();
+						totalPages = (int)Math.Ceiling(count / pageSize);
+					}
+
 					string sql = "SELECT * FROM orders ORDER BY id DESC";
+					sql += " OFFSET @skip ROWS FETCH NEXT @pageSize ROWS ONLY";
 					using (SqlCommand command = new SqlCommand(sql, connection))
 					{
+						command.Parameters.AddWithValue("@skip", (page - 1) * pageSize);
+						command.Parameters.AddWithValue("@pageSize", pageSize);
+
 						using (SqlDataReader reader = command.ExecuteReader())
 						{
 							while (reader.Read())
