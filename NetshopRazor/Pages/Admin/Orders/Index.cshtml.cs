@@ -1,12 +1,16 @@
 using System.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using NetshopRazor.MyHelpers;
 using NetshopRazor.Pages.Admin.Books;
 
 namespace NetshopRazor.Pages.Admin.Orders
 {
+	[RequireAuth(RequiredRole = "admin")]
 	public class IndexModel : PageModel
 	{
+		public List<OrderInfo> listOrders = new List<OrderInfo>();
+
 		private readonly string connectionString;
 
 		public IndexModel(IConfiguration configuration)
@@ -15,6 +19,41 @@ namespace NetshopRazor.Pages.Admin.Orders
 		}
 		public void OnGet()
 		{
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+
+					string sql = "SELECT * FROM orders ORDER BY id DESC";
+					using (SqlCommand command = new SqlCommand(sql, connection))
+					{
+						using (SqlDataReader reader = command.ExecuteReader())
+						{
+							while (reader.Read())
+							{
+								OrderInfo orderInfo = new OrderInfo();
+								orderInfo.id = reader.GetInt32(0);
+								orderInfo.clientId = reader.GetInt32(1);
+								orderInfo.orderDate = reader.GetDateTime(2).ToString("MM/dd/yyyy");
+								orderInfo.shippingFee = reader.GetDecimal(3);
+								orderInfo.deliveryAddress = reader.GetString(4);
+								orderInfo.paymentMethod = reader.GetString(5);
+								orderInfo.paymentStatus = reader.GetString(6);
+								orderInfo.orderStatus = reader.GetString(7);
+
+								orderInfo.items = OrderInfo.getOrderItems(orderInfo.id, connectionString);
+
+								listOrders.Add(orderInfo);
+							}
+						}
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e.Message);
+			}
 		}
 	}
 
