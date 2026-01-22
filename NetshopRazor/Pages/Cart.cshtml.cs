@@ -157,6 +157,125 @@ namespace NetshopRazor.Pages
 
 			Address = HttpContext.Session.GetString("address") ?? "";
 		}
+
+		public string errorMessage = "";
+		public string successMessage = "";
+
+		public void OnPost()
+		{
+			int client_id = HttpContext.Session.GetInt32("id") ?? 0;
+            if (client_id < 1)
+            {
+				Response.Redirect("/Auth/Login");
+				return;
+			}
+
+			if (!ModelState.IsValid)
+			{
+				errorMessage = "Data validation failed";
+				return;
+			}
+
+			// Read shopping cart items from cookie
+			var bookDictionary = getBookDictionary();
+			if (bookDictionary.Count < 1)
+			{
+				errorMessage = "Your cart is empty";
+				return;
+			}
+
+			// save the order in the database
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+
+					// create a new order in the orders table
+					int newOrderId = 0;
+					string sqlOrder = "INSERT INTO orders (client_id, order_date, shipping_fee, " +
+						"delivery_address, payment_method, payment_status, order_status) " +
+						"OUTPUT INSERTED.id " +
+						"VALUES (@client_id, CURRENT_TIMESTAMP, @shipping_fee, " +
+						"@delivery_address, @payment_method, 'pending', 'created')";
+
+					using (SqlCommand command = new SqlCommand(sqlOrder, connection))
+					{
+						command.Parameters.AddWithValue("@client_id", client_id);
+						command.Parameters.AddWithValue("@shipping_fee", shippingFee);
+						command.Parameters.AddWithValue("@delivery_address", Address);
+						command.Parameters.AddWithValue("@payment_method", PaymentMethod);
+
+						newOrderId = (int)command.ExecuteScalar();
+					}
+
+					// add the ordered books to the order_items table
+					string sqlItem = "INSERT INTO order_items (order_id, book_id, quantity, unit_price) " +
+					  "VALUES (@order_id, @book_id, @quantity, @unit_price)";
+
+					foreach (var keyValuePair in bookDictionary)
+					{
+						string bookID = keyValuePair.Key;
+						int quantity = keyValuePair.Value;
+						decimal unitPrice = getBookPrice(bookID);
+
+						using (SqlCommand command = new SqlCommand(sqlItem, connection))
+						{
+							command.Parameters.AddWithValue("@order_id", newOrderId);
+							command.Parameters.AddWithValue("@book_id", bookID);
+							command.Parameters.AddWithValue("@quantity", quantity);
+							command.Parameters.AddWithValue("@unit_price", unitPrice);
+
+							command.ExecuteNonQuery();
+						}
+					}
+
+				}
+			}
+			catch (Exception ex)
+			{
+				errorMessage = ex.Message;
+				return;
+			}
+
+			//Delete the Cookie "shopping_cart" from Browser.
+			Response.Cookies.Delete("shopping_cart");
+
+			successMessage = "Order created successfully";
+		}
+
+		private decimal getBookPrice(string bookID)
+		{
+			decimal price = 0;
+			
+			try
+			{
+				using (SqlConnection connection = new SqlConnection(connectionString))
+				{
+					connection.Open();
+					string sql = "SELECT price FROM books WHERE id=@id";
+					using (SqlCommand command = new SqlCommand(sql, connection))
+					{
+						command.Parameters.AddWithValue("@id", bookID);
+
+						using (SqlDataReader reader = command.ExecuteReader())
+						{
+							if (reader.Read())
+							{
+								price = reader.GetDecimal(0);
+							}
+						}
+					}
+				}
+
+			}
+			catch (Exception ex)
+			{
+
+			}
+
+			return price;
+		}
 	}
 
 
