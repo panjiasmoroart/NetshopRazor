@@ -13,7 +13,7 @@ namespace NetshopRazor.Pages.Admin.Orders
 
 		public int page = 1; // the current html page
 		public int totalPages = 0;
-		private readonly int pageSize = 3; // orders per page
+		private readonly int pageSize = 5; // orders per page
 
 		private readonly string connectionString;
 
