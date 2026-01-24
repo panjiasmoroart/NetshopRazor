@@ -6,6 +6,7 @@ using NetshopRazor.Pages.Admin.Users;
 
 namespace NetshopRazor.Pages.Admin.Orders
 {
+    //
 	[RequireAuth(RequiredRole = "admin")]
 	public class DetailsModel : PageModel
     {
